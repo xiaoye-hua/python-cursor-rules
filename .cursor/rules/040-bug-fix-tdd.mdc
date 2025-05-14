@@ -1,0 +1,66 @@
+---
+description: Bug-fix protocol – start with failing test
+globs:
+  - "src/**/*.py"
+triggers:
+  - agent_request
+alwaysApply: false
+---
+
+# Bug Fix TDD Protocol
+
+For bug-related requests, always follow this strict protocol:
+
+## Bug Fix Process
+
+1. **Create minimal pytest repro**
+   - Location: `tests/regressions/test_<bug_description>.py`
+   - Write simplest test that reproduces the bug
+   - Test must fail to confirm bug exists
+
+2. **Ensure test fails**
+   - Run: `pytest tests/regressions/test_<bug_description>.py -v`
+   - Capture the failure output
+   - Verify it matches the reported bug
+
+3. **Fix code**
+   - Make minimal changes to fix the bug
+   - Don't refactor unrelated code
+   - Keep changes focused
+
+4. **Verify green bar**
+   - Run the regression test again
+   - Ensure it now passes
+   - Run full test suite to prevent regressions
+
+5. **Document and clean**
+   - Add comment explaining root cause
+   - Remove any debug prints
+   - Update docstrings if behavior changed
+
+## Template
+
+```python
+# tests/regressions/test_issue_123.py
+"""Regression test for Issue #123: [brief description]"""
+
+import pytest
+from src.module import problematic_function
+
+def test_issue_123_reproduction():
+    """Verify fix for: [specific bug description]
+    
+    Root cause: [explain what was wrong]
+    Fix: [explain what was changed]
+    """
+    # Arrange
+    input_data = "problematic input"
+    
+    # Act
+    result = problematic_function(input_data)
+    
+    # Assert
+    assert result == "expected output", "Bug still present"
+```
+
+> Template location: `@tests/_bug_template.py`

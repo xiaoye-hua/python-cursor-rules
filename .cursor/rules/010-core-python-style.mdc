@@ -1,0 +1,36 @@
+---
+description: Enforce modern Python style (PEP 8, Black, typing, f-strings)
+globs:
+  - "src/**/*.py"
+alwaysApply: true
+---
+
+# Core Python Style Guide
+
+When writing Python code, always adhere to these modern style guidelines:
+
+## Formatting
+- Use Black formatting rules with line-length 100
+- Follow PEP 8 conventions
+- Maintain consistent indentation (4 spaces)
+
+## Type Hints
+- All public functions must have type hints
+- Format: `def foo(x: int) -> str:`
+- Use typing module for complex types: `List[str]`, `Dict[str, Any]`, `Optional[int]`
+
+## Logging
+- Prefer `logging.info()` over `print()` for all output
+- Use appropriate log levels: DEBUG, INFO, WARNING, ERROR, CRITICAL
+- Format: `logging.info(f"Processing {item_count} items")`
+
+## String Formatting
+- Use f-strings exclusively for string interpolation
+- Never use `%` formatting or `.format()`
+- Example: `f"Hello, {name}!"` not `"Hello, %s!" % name`
+
+## General Best Practices
+- Keep functions small and focused
+- Use descriptive variable names
+- Add inline comments for complex logic
+- Organize imports: standard library, third-party, local

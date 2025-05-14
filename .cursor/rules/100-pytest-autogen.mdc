@@ -1,0 +1,61 @@
+---
+description: Encourage test-driven feature flow
+triggers:
+  - agent_request   # fires on "write feature", "add function", etc.
+---
+
+# Pytest Auto-Generation
+
+If new feature requested and no tests exist, follow this workflow:
+
+## Test Scaffolding Process
+
+1. **Propose test scaffold**
+   - Before implementing any feature, suggest test structure
+   - Location: `tests/test_<target_module>.py`
+   - Include basic test cases
+
+2. **Use parametrize for edge cases**
+   - Leverage `pytest.mark.parametrize` for multiple scenarios
+   - Test happy path, edge cases, and error conditions
+
+## Test Scaffold Template
+
+```python
+# tests/test_<feature>.py
+import pytest
+from src.<module> import <function_to_implement>
+
+class Test<Feature>:
+    """Test suite for <feature> functionality."""
+    
+    @pytest.mark.parametrize("input_value,expected", [
+        ("normal_case", "expected_result"),
+        ("edge_case_1", "edge_result_1"),
+        ("edge_case_2", "edge_result_2"),
+    ])
+    def test_<feature>_handles_various_inputs(self, input_value, expected):
+        """Test <feature> with different input scenarios."""
+        result = <function_to_implement>(input_value)
+        assert result == expected
+    
+    def test_<feature>_raises_on_invalid_input(self):
+        """Test <feature> properly handles invalid input."""
+        with pytest.raises(ValueError, match="specific error message"):
+            <function_to_implement>("invalid_input")
+    
+    def test_<feature>_integration(self):
+        """Test <feature> works with rest of system."""
+        # Integration test if needed
+        pass
+```
+
+## Prompt Detection
+
+When user says:
+- "write a feature for..."
+- "add a function that..."
+- "implement..."
+- "create new functionality..."
+
+Automatically suggest creating tests FIRST before implementation.

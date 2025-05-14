@@ -1,0 +1,53 @@
+---
+description: Enforce test-driven workflow for src/
+globs:
+  - "src/**/*.py"
+alwaysApply: false       # auto-attach
+---
+
+# Test-Driven Development (TDD) Python
+
+When touching these files, strictly follow the TDD workflow:
+
+## TDD Process
+
+1. **Draft/locate a failing test**
+   - Create or find test in `tests/test_<module>.py`
+   - Test must fail initially to prove it's testing the right thing
+
+2. **Confirm test fails**
+   - Run: `pytest -q tests/test_<module>.py`
+   - Verify the test fails with expected error
+
+3. **Implement minimal code**
+   - Write just enough code to make the test pass
+   - Don't add unnecessary features
+
+4. **Make test pass**
+   - Run pytest again to verify green bar
+   - All tests should pass
+
+5. **Refactor**
+   - Clean up the implementation
+   - Keep type hints & docstrings
+   - Ensure tests still pass
+
+## Best Practices
+
+- Test file naming: `tests/test_<module_name>.py`
+- Test function naming: `test_<function_name>_<scenario>`
+- Use pytest fixtures for common setup
+- Test edge cases and error conditions
+- Keep tests focused and independent
+
+## Example
+
+```python
+# tests/test_calculator.py
+def test_add_positive_numbers():
+    assert add(2, 3) == 5  # This should fail first
+
+# src/calculator.py
+def add(a: int, b: int) -> int:
+    return a + b  # Implement after test fails
+```
