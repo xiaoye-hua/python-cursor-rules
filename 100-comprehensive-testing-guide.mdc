@@ -1,0 +1,151 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description: Comprehensive testing guidelines including scaffolding, TDD linkage, and best practices.
+globs:
+  - "src/**/*.py" # Keep if this rule should also trigger for src files, or adjust if only for test creation phase
+  - "tests/**/*.py" # Primarily for test files and test creation discussions
+
+# Comprehensive Testing Guide
+
+If new feature requested and no tests exist, follow this workflow:
+
+## Core Testing Principle
+- **✅ DO:** Test all features before marking tasks as complete
+- **❌ DON'T:** Mark tasks as done without verification
+
+## Test Scaffolding and Implementation Process
+
+1.  **Propose test scaffold**
+    *   Before implementing any feature, suggest test structure.
+    *   Location: `tests/test_<target_module>.py`.
+    *   Include basic test cases.
+
+2.  **Use parametrize for edge cases**
+    *   Leverage `pytest.mark.parametrize` for multiple scenarios.
+    *   Test happy path, edge cases, and error conditions.
+
+3.  **Implement using TDD**
+    *   For the actual implementation of the feature logic, especially when modifying files in `src/`, adhere to the Test-Driven Development workflow.
+    *   This involves writing a failing test, writing minimal code to pass, and then refactoring.
+    *   Refer to the `@030-tdd-python.mdc` rule for the detailed TDD cycle (Red-Green-Refactor).
+
+## Testing Tools and Commands
+- **Python Tests**
+  - Use pytest for all Python unit and integration tests
+  - Always run with proper Python path: `PYTHONPATH=. pytest tests/{test_file}`
+  - For specific test: `PYTHONPATH=. pytest tests/path/to/test.py::TestClass::test_function`
+  - With coverage: `PYTHONPATH=. pytest --cov=src tests/`
+
+- **UI Tests**
+  - For PyQt GUI components:
+    - Manual testing for basic functionality
+    - Verify animations and transitions work smoothly
+    - Test error handling with invalid inputs
+    - Verify accessibility features work correctly
+    - Test window resizing and responsive behavior
+
+## Test Scaffold Template
+
+```python
+# tests/test_<feature>.py
+import pytest
+from src.<module> import <function_to_implement>
+
+class Test<Feature>:
+    """Test suite for <feature> functionality."""
+
+    @pytest.mark.parametrize("input_value,expected", [
+        ("normal_case", "expected_result"),
+        ("edge_case_1", "edge_result_1"),
+        ("edge_case_2", "edge_result_2"),
+    ])
+    def test_<feature>_handles_various_inputs(self, input_value, expected):
+        """Test <feature> with different input scenarios."""
+        result = <function_to_implement>(input_value)
+        assert result == expected
+
+    def test_<feature>_raises_on_invalid_input(self):
+        """Test <feature> properly handles invalid input."""
+        with pytest.raises(ValueError, match="specific error message"):
+            <function_to_implement>("invalid_input")
+
+    def test_<feature>_integration(self):
+        """Test <feature> works with rest of system."""
+        # Integration test if needed
+        pass
+```
+
+## Test Types to Implement
+
+- **Unit Tests**
+  - Required for all utility functions
+  - Test both success and failure paths
+  - Use mocks for external dependencies
+  - Example:
+    ```python
+    def test_text_processing():
+        # Arrange
+        text = "Hallo, hoe gaat het?"
+
+        # Act
+        result = process_dutch_text(text)
+
+        # Assert
+        assert result.word_count == 4
+        assert result.language == "nl"
+    ```
+
+- **Integration Tests**
+  - Test interaction between components
+  - Focus on API boundaries
+  - Example: Test voice tutor with mock audio input/output
+
+- **End-to-End Tests**
+  - Test complete workflows from user perspective
+  - Simulate real user interactions
+  - Document manual testing steps in task completion notes
+
+## Audio/Voice Testing
+- Test voice recognition with sample audio files
+- Verify TTS output for different voice settings
+- Test microphone input handling
+- Test error handling for missing audio devices
+- Sample test command: `PYTHONPATH=. pytest tests/audio/test_voice_tutor.py`
+
+## GUI Testing
+- Manual testing checklist:
+  - All buttons and controls work as expected
+  - Animations and transitions are smooth
+  - Error states show appropriate messages
+  - Window resizing behaves correctly
+  - Color schemes and fonts are consistent
+- Document specific manual tests performed in task notes
+
+## Test Documentation
+- For each completed task, document:
+  - What tests were run
+  - Any edge cases tested
+  - Results and observations
+  - Any known limitations or future improvements
+
+## When to Mark Tasks Complete
+- Only mark a task as done when:
+  - All automated tests pass
+  - Manual testing confirms functionality
+  - Code meets quality standards
+  - Edge cases have been considered
+  - Any necessary documentation is updated
+
+## Prompt Detection
+
+When user says:
+- "write a feature for..."
+- "add a function that..."
+- "implement..."
+- "create new functionality..."
+
+Automatically suggest creating tests FIRST (as per the 'Test Scaffolding and Implementation Process' section) before implementation.

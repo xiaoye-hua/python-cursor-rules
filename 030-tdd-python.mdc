@@ -1,53 +1,61 @@
 ---
 description: Enforce test-driven workflow for src/
-globs:
-  - "src/**/*.py"
-alwaysApply: false       # auto-attach
+globs: 
+alwaysApply: false
 ---
+description: Enforces the Test-Driven Development (TDD) workflow (Red-Green-Refactor) when modifying core Python source files.
+globs:
+  - "src/**/*.py" # Apply TDD strictly to source code modules
+  # Add other specific paths if TDD is mandatory there, e.g., "core_logic/**/*.py"
 
 # Test-Driven Development (TDD) Python
 
-When touching these files, strictly follow the TDD workflow:
+When modifying files covered by this rule (primarily within `src/`), strictly follow the TDD workflow:
 
 ## TDD Process
 
-1. **Draft/locate a failing test**
-   - Create or find test in `tests/test_<module>.py`
-   - Test must fail initially to prove it's testing the right thing
+1.  **Draft/locate a failing test**
+    *   Create or find a test in `tests/test_<module>.py`.
+    *   The test must fail initially to prove it's testing the right thing and that the feature isn't already implemented.
 
-2. **Confirm test fails**
-   - Run: `pytest -q tests/test_<module>.py`
-   - Verify the test fails with expected error
+2.  **Confirm test fails**
+    *   Run: `PYTHONPATH=. pytest -q tests/test_<module>.py` (using the project's standard test command).
+    *   Verify the test fails with an expected error, indicating the feature is missing or incorrect.
 
-3. **Implement minimal code**
-   - Write just enough code to make the test pass
-   - Don't add unnecessary features
+3.  **Implement minimal code**
+    *   Write just enough code in the corresponding `src/` module to make the failing test pass.
+    *   Focus solely on satisfying the test; avoid adding unrelated features or over-engineering.
 
-4. **Make test pass**
-   - Run pytest again to verify green bar
-   - All tests should pass
+4.  **Make test pass**
+    *   Run `PYTHONPATH=. pytest -q tests/test_<module>.py` again.
+    *   Verify all relevant tests pass (the "green" state).
 
-5. **Refactor**
-   - Clean up the implementation
-   - Keep type hints & docstrings
-   - Ensure tests still pass
+5.  **Refactor**
+    *   Clean up the implementation in `src/` and potentially the test code.
+    *   Improve readability, maintainability, and performance without changing external behavior.
+    *   Keep type hints & docstrings up to date as per `@010-core-python-style_uv.mdc`.
+    *   Ensure all tests still pass after refactoring.
 
 ## Best Practices
 
 - Test file naming: `tests/test_<module_name>.py`
 - Test function naming: `test_<function_name>_<scenario>`
-- Use pytest fixtures for common setup
-- Test edge cases and error conditions
-- Keep tests focused and independent
+- Use pytest fixtures for common setup.
+- Test edge cases and error conditions.
+- Keep tests focused and independent.
 
 ## Example
 
 ```python
-# tests/test_calculator.py
+# In tests/test_calculator.py
+# Step 1 & 2: Write and confirm failing test
 def test_add_positive_numbers():
-    assert add(2, 3) == 5  # This should fail first
+    assert add(2, 3) == 5  # This should fail first if add() isn't implemented or is incorrect
 
-# src/calculator.py
+# In src/calculator.py
+# Step 3 & 4: Implement minimal code to make the test pass
 def add(a: int, b: int) -> int:
-    return a + b  # Implement after test fails
+    """Adds two integers.""" # Step 5: Refactor (e.g., add docstring)
+    return a + b
 ```
+

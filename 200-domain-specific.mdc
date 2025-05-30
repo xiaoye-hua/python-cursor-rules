@@ -1,7 +1,6 @@
 ---
-description: Business-rules cheat-sheet
-globs:
-  - "domain/**/*.py"
+description: 
+globs: 
 alwaysApply: false
 ---
 

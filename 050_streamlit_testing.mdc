@@ -1,0 +1,187 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Streamlit Testing Guidelines
+
+- **Resources**
+  - [Official Documentation](mdc:https:/docs.streamlit.io/develop/concepts/app-testing)
+  - [API Reference](mdc:https:/docs.streamlit.io/develop/api-reference/app-testing)
+  - [Get Started with App Testing](mdc:https:/docs.streamlit.io/develop/concepts/app-testing/get-started)
+  - [Beyond the Basics](mdc:https:/docs.streamlit.io/develop/concepts/app-testing/beyond-basics)
+  - [Automate your Tests with CI](mdc:https:/docs.streamlit.io/develop/concepts/app-testing/automate-tests)
+
+- **Use Streamlit's Official Testing Framework**
+  - Import the testing module: `from streamlit.testing.v1 import AppTest`
+  - Initialize test app with one of these methods:
+    ```python
+    # From file
+    at = AppTest.from_file("app.py")
+    
+    # From string
+    at = AppTest.from_string("""
+    import streamlit as st
+    st.title("Test App")
+    """)
+    
+    # From function
+    at = AppTest.from_function(my_app_function)
+    ```
+
+- **Test Structure and Organization**
+  - Name test files with `test_` prefix or `_test` suffix
+  - Place tests in a dedicated `tests/` directory
+  - Use pytest for running tests: `pytest tests/`
+  - Each test function should focus on a single behavior
+
+- **Essential Testing Pattern**
+  ```python
+  # ✅ DO: Follow this pattern for test functions
+  def test_specific_behavior():
+      # 1. Initialize the test app
+      at = AppTest.from_file("app.py")
+      
+      # 2. Set initial conditions (optional)
+      at.secrets["API_KEY"] = "test_key"
+      
+      # 3. Run the app for first render
+      at.run()
+      
+      # 4. Interact with elements
+      at.text_input[0].input("test value").run()
+      at.button[0].click().run()
+      
+      # 5. Assert expected outcomes
+      assert at.markdown[0].value == "Expected output"
+  ```
+
+- **Accessing Elements**
+  - **By Index**: `at.button[0]`, `at.text_input[1]`
+  - **By Key**: `at.button("submit_key")`, `at.text_input(key="name_input")`
+  - **From Containers**: 
+    - Sidebar: `at.sidebar.checkbox[0]`
+    - Columns: `at.columns[0].button[0]`
+    - Tabs: `at.tabs[1].selectbox[0]`
+
+- **Simulating User Interactions**
+  - **Button clicks**: `at.button[0].click().run()`
+  - **Text input**: `at.text_input[0].input("new text").run()`
+  - **Checkbox**: `at.checkbox[0].check().run()` or `at.checkbox[0].uncheck().run()`
+  - **Number input**: `at.number_input[0].increment().run()` or `at.number_input[0].set_value(5).run()`
+  - **Remember to call `.run()` after each interaction**
+
+- **Assertions and Validations**
+  - Check element values: `assert at.markdown[0].value == "Expected text"`
+  - Check widget states: `assert at.checkbox[0].value == True`
+  - Validate element properties: `assert at.selectbox[0].options == ["A", "B", "C"]`
+  - Check for elements: `assert len(at.error) > 0`
+
+- **Testing Session State**
+  - Access session state via the app instance:
+  ```python
+  at.run()
+  assert "counter" in at.session_state
+  assert at.session_state["counter"] == 5
+  ```
+
+- **Handling Secrets**
+  - Set test secrets before running: `at.secrets["API_KEY"] = "test_key"`
+  - Mock external dependencies for testing
+
+- **Testing Multipage Apps**
+  - Test each page separately using `AppTest.from_file()`
+  - For testing page navigation, test each page's functionality independently
+  ```python
+  # Test main page
+  at_main = AppTest.from_file("streamlit_app.py")
+  at_main.run()
+  
+  # Test secondary page
+  at_page2 = AppTest.from_file("pages/page2.py")
+  at_page2.run()
+  ```
+
+- **Set Up Continuous Integration with GitHub Actions**
+  - Create a workflow file `.github/workflows/streamlit-app.yml`:
+  ```yaml
+  # ✅ DO: Use Streamlit's official GitHub Action
+  name: Streamlit app
+  
+  on:
+    push:
+      branches: ["main"]
+    pull_request:
+      branches: ["main"]
+  
+  jobs:
+    app-tests:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-python@v5
+          with:
+            python-version: "3.11"
+        - uses: streamlit/streamlit-app-action@v0.0.3
+          with:
+            app-path: streamlit_app.py
+            # Optional: enable linting
+            ruff: true
+            # Optional: add custom pytest arguments
+            pytest-args: "-v --junit-xml=test-results.xml"
+  ```
+
+- **Advanced Testing Practices**
+  - **Test fixture creation**:
+  ```python
+  # ✅ DO: Create reusable test fixtures
+  @pytest.fixture
+  def sample_app():
+      at = AppTest.from_file("app.py")
+      at.run()
+      return at
+      
+  def test_with_fixture(sample_app):
+      assert sample_app.title[0].value == "My App Title"
+  ```
+  
+  - **Parameterized tests**:
+  ```python
+  # ✅ DO: Test with multiple inputs
+  @pytest.mark.parametrize("input_value,expected", [
+      ("hello", "HELLO"),
+      ("world", "WORLD"),
+  ])
+  def test_text_transformation(input_value, expected):
+      at = AppTest.from_file("app.py")
+      at.run()
+      at.text_input[0].input(input_value).run()
+      assert at.text[0].value == expected
+  ```
+
+- **Visual Testing**
+  - For extensive visual testing, consider external tools like Selenium or Playwright
+  - For basic visual testing, verify elements exist and have expected content
+
+- **Common Testing Patterns**
+  - Test initial state
+  - Test user interactions
+  - Test error cases
+  - Test data processing flows
+  - Test multi-step processes
+
+- **❌ DON'T: Common Testing Mistakes**
+  - Forgetting to call `.run()` after initializing or interacting
+  - Not setting up test data/state properly
+  - Testing too many behaviors in a single test
+  - Using hardcoded indices without clear context
+  - Writing tests after implementation instead of alongside it
+
+- **✅ DO: Testing Best Practices**
+  - Keep tests focused on a single behavior
+  - Use descriptive test function names
+  - Mock external dependencies
+  - Test edge cases
+  - Organize tests logically by feature/component
+  - Run tests automatically in CI/CD pipeline
+  - Include test coverage measurements

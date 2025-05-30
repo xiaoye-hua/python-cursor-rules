@@ -1,0 +1,113 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description: Enforce modern Python style (PEP 8, Black, typing, f-strings)
+globs:
+  - "src/**/*.py"
+alwaysApply: true
+# Core Python Style Guide
+
+When writing Python code, always adhere to these modern style guidelines:
+
+## Environment Setup
+- Python environment is managed by `uv`, to install package, please use `uv pip install {package_name}`
+- Python interpretor is located in `PYTHONPATH=. .venv/bin/python`, so always use this to run Python codes
+- To run the test, use `PYTHONPATH=. pytest tests/{test file or directory}`
+
+## Formatting
+- Use Black formatting rules with line-length 100
+- Follow PEP 8 conventions
+- Maintain consistent indentation (4 spaces)
+
+## Type Hints
+- All public functions must have type hints
+- Always add necessary type hint
+- Format: `def foo(x: int) -> str:`
+- Use typing module for complex types: `List[str]`, `Dict[str, Any]`, `Optional[int]`
+
+## Logging
+- Prefer `logging.info()` over `print()` for all output
+- Use appropriate log levels: DEBUG, INFO, WARNING, ERROR, CRITICAL
+- Format: `logging.info(f"Processing {item_count} items")`
+
+## String Formatting
+- Use f-strings exclusively for string interpolation
+- Never use `%` formatting or `.format()`
+- Example: `f"Hello, {name}!"` not `"Hello, %s!" % name`
+
+## Error Handling Best Practices
+
+- **Let Errors Fail When Appropriate**
+  - Don't wrap code in try-except blocks that hide or suppress important errors
+  - Only catch exceptions when you have a specific recovery strategy
+  - Exception handling should be targeted and purposeful
+
+- **✅ DO: Let errors propagate when you can't properly handle them**
+  ```python
+  # Good: Let the caller handle any errors that might occur
+  def process_data(data):
+      return data.transform()
+  ```
+
+- **❌ DON'T: Catch exceptions broadly without proper handling**
+  ```python
+  # Bad: Hiding errors with empty except blocks
+  def process_data(data):
+      try:
+          return data.transform()
+      except:  # Too broad, hides all errors
+          return None  # Silently fails, difficult to debug
+  ```
+
+- **❌ DON'T: Use try-except as flow control**
+  ```python
+  # Bad: Using exceptions for normal flow control
+  def get_setting(key):
+      try:
+          return settings[key]
+      except KeyError:
+          return default_settings[key]  # This should be an if-else check instead
+  ```
+
+- **✅ DO: Use try-except for specific, expected errors with proper handling**
+  ```python
+  # Good: Catching specific exceptions with meaningful recovery
+  def save_data(data, filepath):
+      try:
+          with open(filepath, 'w') as f:
+              json.dump(data, f)
+      except (PermissionError, IOError) as e:
+          logger.error(f"Failed to write to {filepath}: {e}")
+          raise RuntimeError(f"Could not save data: {e}") from e
+  ```
+
+- **✅ DO: Add context when re-raising exceptions**
+  ```python
+  # Good: Adding context when re-raising
+  def process_user_data(user_id):
+      try:
+          user = get_user(user_id)
+          return user.process()
+      except UserNotFoundError as e:
+          # Add context before re-raising
+          raise UserProcessingError(f"Failed to process user {user_id}") from e
+  ```
+
+- **Best Practices for Error Handling**
+  - Only catch exceptions you can handle properly
+  - Be specific about which exceptions you catch
+  - Provide meaningful error messages
+  - Use logging to record error details
+  - Don't silence errors that indicate bugs
+  - Consider using context managers instead of try-except when appropriate
+  - Don't return None or default values when errors indicate bugs
+
+## General Best Practices
+- Keep functions small and focused
+- Use descriptive variable names
+- Add inline comments for complex logic
+- Organize imports: standard library, third-party, local
+
