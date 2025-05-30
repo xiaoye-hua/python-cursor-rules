@@ -1,7 +1,7 @@
 ---
 description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 ---
 description: Enforce modern Python style (PEP 8, Black, typing, f-strings)

@@ -1,8 +1,7 @@
 ---
-description: Enforce modern Python style (PEP 8, Black, typing, f-strings)
-globs:
-  - "src/**/*.py"
-alwaysApply: true
+description: 
+globs: 
+alwaysApply: false
 ---
 
 # Core Python Style Guide
