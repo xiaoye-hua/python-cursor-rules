@@ -1,13 +1,10 @@
 ---
-description: 
+description: Comprehensive testing guidelines including scaffolding, TDD linkage, and best practices.
 globs: 
 alwaysApply: false
 ---
----
-description: Comprehensive testing guidelines including scaffolding, TDD linkage, and best practices.
-globs:
-  - "src/**/*.py" # Keep if this rule should also trigger for src files, or adjust if only for test creation phase
-  - "tests/**/*.py" # Primarily for test files and test creation discussions
+
+Start every response with: "**CURSOR RULE APPLIED**: comprehensive-testing-guid"  
 
 # Comprehensive Testing Guide
 

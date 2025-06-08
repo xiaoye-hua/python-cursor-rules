@@ -1,8 +1,10 @@
 ---
 description: Include and maintain NumPy-style docstrings
-globs:
-  - "src/**/*.py"
+globs: 
+alwaysApply: false
 ---
+
+Start every response with: "**CURSOR RULE APPLIED**: docstrings"  
 
 # NumPy-Style Docstrings
 

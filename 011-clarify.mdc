@@ -1,0 +1,29 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+Start every response with: "**CURSOR RULE APPLIED**: clarify"   # ← remove once you’ve confirmed the rule is loaded
+
+# Clarification Protocol
+
+## When to ask
+- **Initial** – the request lacks examples, file paths, or acceptance criteria.
+- **Mid-task** – you encounter an undefined symbol, missing dependency, or ambiguous requirement.
+
+## How to ask
+1. Pose up to **three** concise, bullet-point questions.  
+2. End the message with **exactly this line, on its own** (all caps, no punctuation):
+
+HALT-FOR-CLARIFICATION
+
+(Do not proceed until the user replies.)
+
+## After clarification
+- Integrate the new information and continue.  
+- If context is still incomplete, repeat the ask-step once; otherwise finish the task.
+
+## Token guardrails
+- Keep this rule ≤ 60 lines.  
+- Avoid large code blocks inside the rule itself.

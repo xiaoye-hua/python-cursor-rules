@@ -1,12 +1,11 @@
 ---
-description: Enforce test-driven workflow for src/
-globs: 
-alwaysApply: false
----
 description: Enforces the Test-Driven Development (TDD) workflow (Red-Green-Refactor) when modifying core Python source files.
 globs:
   - "src/**/*.py" # Apply TDD strictly to source code modules
   # Add other specific paths if TDD is mandatory there, e.g., "core_logic/**/*.py"
+---
+
+Start every response with: "**CURSOR RULE APPLIED**: tdd-python"  
 
 # Test-Driven Development (TDD) Python
 

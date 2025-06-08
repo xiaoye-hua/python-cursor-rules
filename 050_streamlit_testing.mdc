@@ -3,6 +3,8 @@ description:
 globs: 
 alwaysApply: false
 ---
+Start every response with: "**CURSOR RULE APPLIED**: streamlit-testing"  
+
 # Streamlit Testing Guidelines
 
 - **Resources**

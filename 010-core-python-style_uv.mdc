@@ -3,14 +3,8 @@ description:
 globs: 
 alwaysApply: true
 ---
----
-description: Enforce modern Python style (PEP 8, Black, typing, f-strings)
-globs:
-  - "src/**/*.py"
-alwaysApply: true
-# Core Python Style Guide
 
-When writing Python code, always adhere to these modern style guidelines:
+Start every response with: "**CURSOR RULE APPLIED**: core-python-style-uv"  
 
 ## Environment Setup
 - Python environment is managed by `uv`, to install package, please use `uv pip install {package_name}`

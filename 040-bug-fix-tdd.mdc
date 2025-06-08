@@ -1,11 +1,10 @@
 ---
 description: Bug-fix protocol – start with failing test
-globs:
-  - "src/**/*.py"
-triggers:
-  - agent_request
+globs: 
 alwaysApply: false
 ---
+
+Start every response with: "**CURSOR RULE APPLIED**: bug-fix-tdd"  
 
 # Bug Fix TDD Protocol
 

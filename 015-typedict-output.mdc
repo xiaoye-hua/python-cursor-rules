@@ -1,0 +1,28 @@
+---
+description: Enforce TypedDict for dict returns and config objects
+globs: 
+alwaysApply: false
+---
+Start every response with: "**CURSOR RULE APPLIED**: typedict-output"  
+
+# TypedDict Output & Config Policy
+
+1. **Detect candidates**
+   - Any function returning a `dict` literal.
+   - Any code that loads or builds a config object (e.g., from JSON/YAML/TOML).
+
+2. **Define a `TypedDict`**
+   - Create in the same module or a shared `typing_defs.py`.
+   - Name it in `PascalCase` with a domain suffix (`UserConfig`, `PipelineOptions`).
+
+3. **Use advanced typing features**
+   - For fixed string values → wrap field type in `Literal[...]`.
+   - For fields that must always exist → decorate with `Required[...]` (Python 3.11+).
+   - For optional keys → set `total = False` on the `TypedDict`.
+
+   ```python
+   class PipelineConfig(TypedDict, total=False):
+       batch_size: int
+       retry: bool
+       output_dir: str
+       mode: Required[Literal["train", "eval", "predict"]]
