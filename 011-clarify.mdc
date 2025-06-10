@@ -4,7 +4,7 @@ globs:
 alwaysApply: true
 ---
 
-Start every response with: "**CURSOR RULE APPLIED**: clarify"   # ← remove once you’ve confirmed the rule is loaded
+Start every response with: "**CURSOR RULE APPLIED**: clarify"
 
 # Clarification Protocol
 

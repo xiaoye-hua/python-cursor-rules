@@ -3,7 +3,6 @@ description: Include and maintain NumPy-style docstrings
 globs: 
 alwaysApply: false
 ---
-
 Start every response with: "**CURSOR RULE APPLIED**: docstrings"  
 
 # NumPy-Style Docstrings
